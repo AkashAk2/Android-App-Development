@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "950723602821",
+    "project_id": "skillswap-fit5046",
+    "storage_bucket": "skillswap-fit5046.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950723602821:android:2ca0ad55f51e2014ebbcec",
+        "android_client_info": {
+          "package_name": "com.fit5046.skillswap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950723602821-onmiud53gu9fo1vr6bqrt7j1oilacmqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUmYDwLheCGhUjFRcYTR6pjvzsdTHwLew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950723602821-onmiud53gu9fo1vr6bqrt7j1oilacmqm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
