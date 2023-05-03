@@ -55,6 +55,15 @@ public class SignupActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check if all the fields are filled
+                if (firstName.getText().toString().trim().isEmpty() ||
+                        lastName.getText().toString().trim().isEmpty() ||
+                        mobileNumber.getText().toString().trim().isEmpty() ||
+                        emailID.getText().toString().trim().isEmpty() ||
+                        password.getText().toString().trim().isEmpty() ||
+                        reEnteredPassword.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(SignupActivity.this, "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
+                } else {
                 String email = emailID.getText().toString().trim();
                 String pass = password.getText().toString().trim();
                 String reEnteredPass = reEnteredPassword.getText().toString().trim();
@@ -65,7 +74,7 @@ public class SignupActivity extends AppCompatActivity {
                     // Show a message to the user if passwords don't match
                     Toast.makeText(SignupActivity.this, "Passwords don't match.", Toast.LENGTH_SHORT).show();
                 }
-            }
+            }}
         });
     }
 

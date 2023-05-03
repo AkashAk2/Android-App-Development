@@ -41,7 +41,8 @@ public class HomePage extends AppCompatActivity {
         guestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(HomePage.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
