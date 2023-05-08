@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appBackground"
     tools:context=".LoginActivity">
 
     <EditText
@@ -11,8 +12,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/enter_your_email_id"
+        android:hint="@string/enter_email"
         android:inputType="textEmailAddress"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +33,9 @@
         android:ems="10"
         android:hint="@string/enter_your_password"
         android:inputType="textPassword"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditText"
@@ -39,7 +46,8 @@
     <Button
         android:id="@+id/loginBtn"
         android:text="Login"
-        android:backgroundTint="#146C94"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
         android:layout_width="150dp"
         android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"

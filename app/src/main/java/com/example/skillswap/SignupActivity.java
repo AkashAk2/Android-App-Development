@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 import android.util.Log;
@@ -50,6 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         EditText password = findViewById(R.id.passwordEditText);
         EditText reEnteredPassword = findViewById(R.id.passwordReEnterEditText);
         Button registerButton = findViewById(R.id.register);
+        TextView signupTitle = findViewById(R.id.signupTitle);
 
 
         registerButton.setOnClickListener(new View.OnClickListener() {

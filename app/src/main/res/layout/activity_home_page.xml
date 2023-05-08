@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appBackground"
     tools:context=".HomePage">
 
     <Button
@@ -11,7 +12,8 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="@string/login"
-        android:backgroundTint="#146C94"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +26,8 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="@string/sign_up"
-        android:backgroundTint="#146C94"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/loginButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +38,8 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:text="@string/continue_as_guest"
-        android:backgroundTint="#146C94"
+        android:textColor="@color/white"
+        android:backgroundTint="#1363DF"
         app:layout_constraintTop_toBottomOf="@+id/signupButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
