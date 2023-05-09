@@ -2,16 +2,21 @@ package com.example.skillswap;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,8 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private DatabaseReference databaseReference;
@@ -31,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ImageView profileImageView = findViewById(R.id.profileImageView);
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
-        Button logoutButton = findViewById(R.id.logoutButton);
+        SearchView searchBar = findViewById(R.id.searchBar);
+        RecyclerView skillRecommendationsRecyclerView = findViewById(R.id.skillRecommendationsRecyclerView);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         if (currentUser != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
@@ -63,21 +72,63 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            logoutButton.setOnClickListener(new View.OnClickListener() {
+            // Set an onClickListener for the profileImageView to open the Profile screen
+            profileImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAuth.signOut();
-                    mGoogleSignInClient.signOut();
-
-                    // Redirect to LoginActivity or any other activity you want the user to land on after logging out
-                    Intent intent = new Intent(MainActivity.this, HomePage.class);
+                    // Replace ProfileActivity with the actual Profile activity class
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    finish();
                 }
             });
+
+            //TODO Implement search functionality, personalized skill recommendations and bottom navigation bar logic here
+
         } else {
             welcomeTextView.setText("Hello, guest user!");
-            logoutButton.setVisibility(View.GONE); // Hide the logout button
+            profileImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Replace ProfileActivity with the actual Profile activity class
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home_menu_item:
+                // Handle the home menu item click
+                Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.chat_menu_item:
+                // Handle the chat menu item click
+                Toast.makeText(this, "Chat clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.myskill_menu_item:
+                // Handle the my skill menu item click
+                Toast.makeText(this, "My Skill clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.schedule_menu_item:
+                // Handle the schedule menu item click
+                Toast.makeText(this, "Schedule clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            case R.id.profile_menu_item:
+                // Handle the profile menu item click
+                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return false;
         }
     }
 }
