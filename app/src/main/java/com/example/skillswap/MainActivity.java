@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home_menu_item:
-                // Handle the home menu item click
-                Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+                Intent homeIntent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(homeIntent);
                 return true;
 
             case R.id.chat_menu_item:
@@ -121,10 +121,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
 
             case R.id.profile_menu_item:
-                // Handle the profile menu item click
-                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(profileIntent);
                 return true;
 
             default:
