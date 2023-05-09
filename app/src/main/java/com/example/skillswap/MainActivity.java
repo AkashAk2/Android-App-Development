@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             profileImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Replace ProfileActivity with the actual Profile activity class
                     Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    intent.putExtra("googleSignInClientId", getString(R.string.default_web_client_id));
                     startActivity(intent);
                 }
             });
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 @Override
                 public void onClick(View v) {
                     // Replace ProfileActivity with the actual Profile activity class
-                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
             });
