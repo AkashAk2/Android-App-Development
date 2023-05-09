@@ -33,7 +33,6 @@
         android:textColor="@color/white"
         android:backgroundTint="@color/white"
         android:text="Welcome, user!"
-        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appLogoImageView" />
