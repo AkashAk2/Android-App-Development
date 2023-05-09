@@ -1,0 +1,49 @@
+<resources>
+    <string-array name="Sports">
+        <item> Football </item>
+        <item> Basketball </item>
+        <item> Tennis </item>
+        <item> Cricket </item>
+        <item> Hockey </item>
+        <item> Ice Skating </item>
+        <item> Running </item>
+        <item> Yoga </item>
+        <item> Badminton </item>
+    </string-array>
+    <string-array name="Arts">
+        <item> Painting </item>
+        <item> Drawing </item>
+        <item> Sculpture </item>
+    </string-array>
+    <string-array name="Music">
+        <item> Guitar </item>
+        <item> Piano </item>
+        <item> Violin </item>
+        <item> Trumpet </item>
+        <item> Flute </item>
+    </string-array>
+    <string-array name="Programming">
+        <item> Java </item>
+        <item> C++ </item>
+        <item> Python </item>
+        <item> R </item>
+        <item> Javascript </item>
+        <item> Kotlin </item>
+    </string-array>
+    <string-array name="Languages">
+        <item> English </item>
+        <item> Spanish </item>
+        <item> Hindi </item>
+        <item> French </item>
+        <item> Japanese </item>
+        <item> Russian </item>
+        <item> Chinese </item>
+        <item> Portugese </item>
+    </string-array>
+    <string-array name="General">
+        <item> Cooking </item>
+        <item> Organisation </item>
+        <item> Time management </item>
+        <item> Financial management </item>
+    </string-array>
+</resources>
