@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mySkillsFragment">
+    <fragment
+        android:id="@+id/mySkillsFragment"
+        android:name="com.example.skillswap.MySkillsFragment"
+        android:label="My Skills"
+        tools:layout="@layout/fragment_my_skills" >
+        <action
+            android:id="@+id/action_mySkillsFragment_to_addSkillsFragment"
+            app:destination="@id/addSkillsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addSkillsFragment"
+        android:name="com.example.skillswap.AddSkillsFragment"
+        android:label="Add Skill"
+        tools:layout="@layout/fragment_add_skills" />
+</navigation>

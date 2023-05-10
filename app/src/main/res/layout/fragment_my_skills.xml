@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="#146C94"
+    android:orientation="vertical">
+
+    <!-- Username -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/username_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textSize="24sp" />
+
+        <!-- Select role -->
+        <Spinner
+            android:id="@+id/role_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:prompt="@string/role_spinner_prompt"
+            android:entries="@array/roles"
+            android:padding="16dp"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- Skills to learn -->
+    <TextView
+        android:id="@+id/learn_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="18dp"
+        android:text="I want to learn" />
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/learnSkillRecyclerView"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/learnAddSkillBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:text="Add Skill" />
+
+    <!-- Skills to teach -->
+
+    <TextView
+        android:id="@+id/teach_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="18dp"
+        android:text="I can teach" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/teachSkillRecyclerView"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/teachAddSkillBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#2196F3"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:text="Add Skill" />
+
+</LinearLayout>

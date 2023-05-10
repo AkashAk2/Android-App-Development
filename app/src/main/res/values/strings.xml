@@ -8,4 +8,10 @@
     <string name="enter_your_first_name">Enter your first name</string>
     <string name="first_name">First Name</string>
     <string name="enter_email">Enter your Email ID</string>
+    <string name="role_spinner_prompt">Select your role</string>
+    <string-array name="roles">
+        <item>Instructor</item>
+        <item>Student</item>
+        <item>Either</item>
+    </string-array>
 </resources>

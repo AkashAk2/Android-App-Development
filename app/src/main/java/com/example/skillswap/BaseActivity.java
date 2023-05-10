@@ -47,6 +47,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             case R.id.myskill_menu_item:
                 // TODO: Handle the my skill menu item click
+                if (!(this instanceof MySkillActivity)){
+                    Intent mySkillIntent = new Intent(this, MySkillActivity.class);
+                    startActivity(mySkillIntent);
+                    finish();
+                }
                 return true;
 
             case R.id.schedule_menu_item:
