@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +12,8 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.skillswap.R;
+import com.example.skillswap.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
