@@ -68,18 +68,31 @@ public class SignupActivity extends AppCompatActivity {
                         reEnteredPassword.getText().toString().trim().isEmpty()) {
                     Toast.makeText(SignupActivity.this, "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
                 } else {
-                String email = emailID.getText().toString().trim();
-                String pass = password.getText().toString().trim();
-                String reEnteredPass = reEnteredPassword.getText().toString().trim();
+                    String email = emailID.getText().toString().trim();
+                    String pass = password.getText().toString().trim();
+                    String reEnteredPass = reEnteredPassword.getText().toString().trim();
+                    String mobile = mobileNumber.getText().toString().trim();
 
-                if (pass.equals(reEnteredPass)) {
-                    registerUser(email, pass);
-                } else {
-                    // Show a message to the user if passwords don't match
-                    Toast.makeText(SignupActivity.this, "Passwords don't match.", Toast.LENGTH_SHORT).show();
+                    if (!isValidMobileNumber(mobile)) {
+                        Toast.makeText(SignupActivity.this, "Mobile number must be at least 10 characters long.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (!isValidPassword(pass)) {
+                        Toast.makeText(SignupActivity.this, "Password must be at least 8 characters long and contain at least 1 symbol.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (pass.equals(reEnteredPass)) {
+                        registerUser(email, pass);
+                    } else {
+                        // Show a message to the user if passwords don't match
+                        Toast.makeText(SignupActivity.this, "Passwords don't match.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }}
+            }
         });
+
     }
 
     private void registerUser(String email, String password) {
@@ -108,6 +121,28 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private boolean isValidPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+
+        boolean hasSymbol = false;
+        for (char c : password.toCharArray()) {
+            if (!Character.isLetterOrDigit(c)) {
+                hasSymbol = true;
+                break;
+            }
+        }
+
+        return hasSymbol;
+    }
+
+    private boolean isValidMobileNumber(String mobileNumber) {
+        return mobileNumber.length() >= 10;
+    }
+
+
 
     private void storeUserData(String uid) {
         Log.d("SignupActivity", "storeUserData: Storing user data for UID: " + uid);
