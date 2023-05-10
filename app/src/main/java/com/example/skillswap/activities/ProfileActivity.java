@@ -22,8 +22,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,6 +42,7 @@ public class ProfileActivity extends BaseActivity {
     private EditText lastNameEditText;
     private EditText mobileNumberEditText;
     private EditText dobEditText;
+    private ValueEventListener userDetailsValueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,14 @@ public class ProfileActivity extends BaseActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Remove ValueEventListener
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                if (currentUser != null && userDetailsValueEventListener != null) {
+                    String userId = currentUser.getUid();
+                    DatabaseReference userRef = mDatabase.child("users").child(userId);
+                    userRef.removeEventListener(userDetailsValueEventListener);
+                }
+
                 // Sign out from Firebase
                 mAuth.signOut();
 
@@ -158,13 +170,36 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void loadUserDetails() {
-        // Load user details from Firebase and set them in the EditTexts
-        // This is just a placeholder for the actual implementation
-        // firstNameEditText.setText(user.getFirstName());
-        // lastNameEditText.setText(user.getLastName());
-        // mobileNumberEditText.setText(user.getMobileNumber());
-        // dobEditText.setText(user.getDob());
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            DatabaseReference userRef = mDatabase.child("users").child(userId);
+
+            userDetailsValueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        User user = dataSnapshot.getValue(User.class);
+                        if (user != null) {
+                            firstNameEditText.setText(user.getFirstName());
+                            lastNameEditText.setText(user.getLastName());
+                            mobileNumberEditText.setText(user.getMobileNumber());
+                            dobEditText.setText(user.getDob());
+                        }
+                    } else {
+                        showToast("User not found. Please update your profile.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    showToast("Failed to load user data. Please try again.");
+                }
+            };
+            userRef.addValueEventListener(userDetailsValueEventListener);
+        }
     }
+
 
     private void updateUserProfile() {
         // Save the updated user profile to Firebase
@@ -176,7 +211,7 @@ public class ProfileActivity extends BaseActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            User updatedUser = new User(firstName, lastName, mobileNumber, currentUser.getEmail(), dob);
+            User updatedUser = new User(firstName, lastName, dob, mobileNumber, currentUser.getEmail());
 
             mDatabase.child("users").child(userId).setValue(updatedUser)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
