@@ -93,6 +93,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        // Minimize the app when the back button is pressed on the main activity
+        moveTaskToBack(true);
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (bottomNavigationView != null) {
