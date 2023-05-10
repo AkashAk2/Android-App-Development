@@ -114,6 +114,7 @@ public class SignupActivity extends AppCompatActivity {
         User newUser = new User(
                 firstName.getText().toString().trim(),
                 lastName.getText().toString().trim(),
+                "",
                 mobileNumber.getText().toString().trim(),
                 emailID.getText().toString().trim()
         );

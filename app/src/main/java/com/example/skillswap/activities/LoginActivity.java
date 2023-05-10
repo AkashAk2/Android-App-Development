@@ -135,6 +135,7 @@ public class LoginActivity extends AppCompatActivity {
                                             User newUser = new User(
                                                     currentUser.getDisplayName(),
                                                     "", // Google doesn't provide separate first and last names, so leave lastName empty
+                                                    "",
                                                     "", // Google doesn't provide phone numbers, so leave mobileNumber empty
                                                     currentUser.getEmail()
                                             );

@@ -3,6 +3,8 @@ package com.example.skillswap.models;
 public class User {
     private String firstName;
     private String lastName;
+
+    private String dob;
     private String mobileNumber;
     private String emailID;
 
@@ -10,9 +12,10 @@ public class User {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String firstName, String lastName, String mobileNumber, String emailID) {
+    public User(String firstName, String lastName, String dob, String mobileNumber, String emailID) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.dob = dob;
         this.mobileNumber = mobileNumber;
         this.emailID = emailID;
     }
@@ -31,6 +34,14 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getMobileNumber() {
