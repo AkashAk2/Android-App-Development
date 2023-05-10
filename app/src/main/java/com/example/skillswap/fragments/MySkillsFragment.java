@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.skillswap.models.MySkillViewModel;
 import com.example.skillswap.R;
+import com.example.skillswap.models.Skill;
+import com.example.skillswap.adapters.SkillAdapter;
+import com.example.skillswap.adapters.TeachSkillAdapter;
 
 import java.util.List;
 
@@ -89,7 +93,7 @@ public class MySkillsFragment extends Fragment {
 
         mMySkillViewModel.tSkillLiveData.observe(getViewLifecycleOwner(), new Observer<Skill>() {
             @Override
-            public void onChanged(com.example.skillswap.Skill skill) {
+            public void onChanged(Skill skill) {
                 if(skill!=null){
                     Toast.makeText(requireContext(), skill.toString(), Toast.LENGTH_SHORT).show();
                     mMySkillViewModel.addToTeachList(skill.getSkill());

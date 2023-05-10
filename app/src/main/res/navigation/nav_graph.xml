@@ -6,7 +6,7 @@
     app:startDestination="@id/mySkillsFragment">
     <fragment
         android:id="@+id/mySkillsFragment"
-        android:name="com.example.skillswap.MySkillsFragment"
+        android:name="com.example.skillswap.fragments.MySkillsFragment"
         android:label="My Skills"
         tools:layout="@layout/fragment_my_skills" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/addSkillsFragment"
-        android:name="com.example.skillswap.AddSkillsFragment"
+        android:name="com.example.skillswap.fragments.AddSkillsFragment"
         android:label="Add Skill"
         tools:layout="@layout/fragment_add_skills" />
 </navigation>

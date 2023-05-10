@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.activities;
 
 import android.os.Bundle;
 
@@ -10,7 +10,10 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.widget.Toolbar;
 
-public class MySkillActivity extends AppCompatActivity {
+import com.example.skillswap.models.MySkillViewModel;
+import com.example.skillswap.R;
+
+public class MySkillActivity extends BaseActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private Toolbar toolbar;

@@ -36,12 +36,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".MySkillActivity"></activity>
-=======
+        <activity android:name=".activities.MySkillActivity"></activity>
         <activity android:name=".activities.ProfileActivity"></activity>
->>>>>>> 6ee987bf3eaf518172841aad793ea30125cd53db
     </application>
 
 </manifest>

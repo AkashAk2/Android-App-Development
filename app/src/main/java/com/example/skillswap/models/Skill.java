@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.models;
 
 public class Skill {
     private String skill;

@@ -1,10 +1,8 @@
-package com.example.skillswap;
+package com.example.skillswap.models;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.example.skillswap.Skill;
 
 import java.util.ArrayList;
 import java.util.List;

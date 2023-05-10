@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;

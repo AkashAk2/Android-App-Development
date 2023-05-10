@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,19 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.skillswap.R;
+import com.example.skillswap.models.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchSkillAdapter extends RecyclerView.Adapter<SearchSkillAdapter.ViewHolder> {
-    private List<com.example.skillswap.Skill> mSkillList;
+    private List<Skill> mSkillList;
     private OnItemClickListener mOnItemClickListener;
-    public SearchSkillAdapter(List<com.example.skillswap.Skill> skillList, OnItemClickListener listener) {
+    public SearchSkillAdapter(List<Skill> skillList, OnItemClickListener listener) {
         mSkillList = skillList;
         mOnItemClickListener = listener;
     }
 
-    public void setSkillList(List<com.example.skillswap.Skill> skillList){
+    public void setSkillList(List<Skill> skillList){
         mSkillList = new ArrayList<>();
         mSkillList.addAll(skillList);
         notifyDataSetChanged();
@@ -60,13 +61,13 @@ public class SearchSkillAdapter extends RecyclerView.Adapter<SearchSkillAdapter.
             categoryTv = itemView.findViewById(R.id.categoryText);
         }
 
-        public void bind(com.example.skillswap.Skill skill) {
+        public void bind(Skill skill) {
             skillTv.setText(skill.getSkill());
             categoryTv.setText(skill.getCategory());
         }
     }
 
     public interface OnItemClickListener{
-        void onSkillClicked(com.example.skillswap.Skill skill);
+        void onSkillClicked(Skill skill);
     }
 }

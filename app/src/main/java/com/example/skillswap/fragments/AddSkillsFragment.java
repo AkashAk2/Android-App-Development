@@ -1,4 +1,4 @@
-package com.example.skillswap;
+package com.example.skillswap.fragments;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,7 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.skillswap.models.MySkillViewModel;
 import com.example.skillswap.R;
+import com.example.skillswap.adapters.SearchSkillAdapter;
+import com.example.skillswap.models.Skill;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class AddSkillsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mMySkillViewModel = new ViewModelProvider(requireActivity()).get(com.example.skillswap.MySkillViewModel.class);
+        mMySkillViewModel = new ViewModelProvider(requireActivity()).get(MySkillViewModel.class);
         searchSkillRecyclerView = view.findViewById(R.id.skillRecyclerView);
         skillTie = view.findViewById(R.id.skillTie);
 
