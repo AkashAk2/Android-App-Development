@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -43,6 +45,13 @@ public class ProfileActivity extends BaseActivity {
     private EditText mobileNumberEditText;
     private EditText dobEditText;
     private ValueEventListener userDetailsValueEventListener;
+    private TextView guestTitle;
+    private TextView guestText;
+    private Button loginButton;
+    private Button signupButton;
+    private Button logoutButton;
+    private TextView userEmail;
+    private Button editprofileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +75,13 @@ public class ProfileActivity extends BaseActivity {
         lastNameEditText = findViewById(R.id.lastNameEditText);
         mobileNumberEditText = findViewById(R.id.mobileNumberEditText);
         dobEditText = findViewById(R.id.dobEditText);
+        guestTitle = findViewById(R.id.guestTitle);
+        guestText = findViewById(R.id.guestText);
+        loginButton = findViewById(R.id.loginButton);
+        logoutButton = findViewById(R.id.logoutButton);
+        signupButton = findViewById(R.id.signupButton);
+        userEmail = findViewById(R.id.userEmailTextView);
+        editprofileButton = findViewById(R.id.editProfileButton);
 
         // Load user details
         loadUserDetails();
@@ -144,6 +160,7 @@ public class ProfileActivity extends BaseActivity {
 
         // Display the user's email
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
         if (currentUser != null) {
             TextView userEmailTextView = findViewById(R.id.userEmailTextView);
             userEmailTextView.setText(currentUser.getEmail());
@@ -231,6 +248,36 @@ public class ProfileActivity extends BaseActivity {
 
     private void showToast(String message) {
         Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateUI(FirebaseUser currentUser) {
+        if (currentUser == null) {
+            guestTitle.setVisibility(View.VISIBLE);
+            guestText.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.VISIBLE);
+            signupButton.setVisibility(View.VISIBLE);
+            logoutButton.setVisibility(View.GONE);
+            userEmail.setVisibility(View.GONE);
+            firstNameEditText.setVisibility(View.GONE);
+            lastNameEditText.setVisibility(View.GONE);
+            mobileNumberEditText.setVisibility(View.GONE);
+            dobEditText.setVisibility(View.GONE);
+            editprofileButton.setVisibility(View.GONE);
+
+
+        } else {
+            guestTitle.setVisibility(View.GONE);
+            guestText.setVisibility(View.GONE);
+            loginButton.setVisibility(View.GONE);
+            signupButton.setVisibility(View.GONE);
+            logoutButton.setVisibility(View.VISIBLE);
+            userEmail.setVisibility(View.VISIBLE);
+            firstNameEditText.setVisibility(View.VISIBLE);
+            lastNameEditText.setVisibility(View.VISIBLE);
+            mobileNumberEditText.setVisibility(View.VISIBLE);
+            dobEditText.setVisibility(View.VISIBLE);
+            editprofileButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
