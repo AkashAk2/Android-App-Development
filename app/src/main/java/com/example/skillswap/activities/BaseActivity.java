@@ -57,6 +57,11 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
 
             case R.id.schedule_menu_item:
                 // TODO: Handle the schedule menu item click
+                if (!(this instanceof ScheduleActivity)){
+                    Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
+                    startActivity(scheduleIntent);
+                    finish();
+                }
                 return true;
 
             case R.id.profile_menu_item:
