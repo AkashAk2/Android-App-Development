@@ -39,7 +39,7 @@
         <activity android:name=".activities.MySkillActivity"></activity>
         <activity android:name=".activities.ProfileActivity"></activity>
         <activity android:name=".activities.ScheduleActivity"></activity>
-        <activity android:name=".activities.AddEventActivity"></activity>
+        <activity android:name=".activities.CreateEventActivity"></activity>
     </application>
 
 </manifest>

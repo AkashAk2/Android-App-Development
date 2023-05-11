@@ -12,6 +12,8 @@ public class ScheduleActivity extends BaseActivity {
 
     private CalendarView calendarView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +26,7 @@ public class ScheduleActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //Login activity
-                Intent intent = new Intent(ScheduleActivity.this, AddEventActivity.class);
+                Intent intent = new Intent(ScheduleActivity.this, CreateEventActivity.class);
                 startActivity(intent);
                 finish();
             }
