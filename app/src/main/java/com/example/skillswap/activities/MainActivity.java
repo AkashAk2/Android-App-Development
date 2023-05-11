@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     // Replace ProfileActivity with the actual Profile activity class
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                     startActivity(intent);
                 }
             });

@@ -145,16 +145,39 @@ public class ProfileActivity extends BaseActivity {
 
                 // Sign out from Firebase
                 mAuth.signOut();
+                updateUI(null);
 
                 // Sign out from Google (if using Google Sign In)
                 if (mGoogleSignInClient != null) {
                     mGoogleSignInClient.signOut();
+                    // Update the UI
+                    updateUI(null);
                 }
 
                 // Redirect the user to the Login/Register/Guest screen
                 Intent intent = new Intent(ProfileActivity.this, HomePage.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Login activity
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+//                finish();
+            }
+        });
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Signup activity
+                Intent intent = new Intent(ProfileActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         });
 
