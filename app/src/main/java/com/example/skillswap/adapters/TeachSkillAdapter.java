@@ -1,5 +1,4 @@
 package com.example.skillswap.adapters;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,11 @@ import java.util.List;
 
 public class TeachSkillAdapter extends RecyclerView.Adapter<TeachSkillAdapter.ViewHolder> {
     private List<String> mSkillsList;
+    private OnItemClickListener mOnItemClickListener;
 
-    public TeachSkillAdapter(List<String> skills) {
+    public TeachSkillAdapter(List<String> skills,OnItemClickListener listener) {
         mSkillsList = skills;
+        mOnItemClickListener = listener;
     }
 
     public void setSkillsList(List<String> skillsList) {
@@ -36,6 +37,12 @@ public class TeachSkillAdapter extends RecyclerView.Adapter<TeachSkillAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(mSkillsList.get(position));
+        holder.itemView.findViewById(R.id.skillBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onSkillClicked(mSkillsList.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
@@ -55,5 +62,9 @@ public class TeachSkillAdapter extends RecyclerView.Adapter<TeachSkillAdapter.Vi
         public void bind(String skill) {
             skillBtn.setText(skill);
         }
+    }
+
+    public interface OnItemClickListener{
+        void onSkillClicked(String skill);
     }
 }

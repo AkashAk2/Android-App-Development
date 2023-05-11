@@ -17,7 +17,7 @@ import java.util.List;
 public class SearchSkillAdapter extends RecyclerView.Adapter<SearchSkillAdapter.ViewHolder> {
     private List<Skill> mSkillList;
     private OnItemClickListener mOnItemClickListener;
-    public SearchSkillAdapter(List<Skill> skillList, OnItemClickListener listener) {
+    public SearchSkillAdapter(List<Skill> skillList,OnItemClickListener listener) {
         mSkillList = skillList;
         mOnItemClickListener = listener;
     }

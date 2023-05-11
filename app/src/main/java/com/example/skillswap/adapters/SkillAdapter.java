@@ -15,9 +15,10 @@ import java.util.List;
 
 public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ViewHolder> {
     private List<String> mSkillsList;
-
-    public SkillAdapter(List<String> skills) {
+    private OnItemClickListener mOnItemClickListener;
+    public SkillAdapter(List<String> skills, OnItemClickListener listener) {
         mSkillsList = skills;
+        mOnItemClickListener = listener;
     }
 
     public void setSkillsList(List<String> skillsList) {
@@ -36,6 +37,12 @@ public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(mSkillsList.get(position));
+        holder.itemView.findViewById(R.id.skillBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onSkillClicked(mSkillsList.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
@@ -55,5 +62,9 @@ public class SkillAdapter extends RecyclerView.Adapter<SkillAdapter.ViewHolder> 
         public void bind(String skill) {
             skillBtn.setText(skill);
         }
+    }
+
+    public interface OnItemClickListener{
+        void onSkillClicked(String skill);
     }
 }
