@@ -4,6 +4,9 @@ public class Skill {
     private String skill;
     private String category;
 
+    public Skill() {
+        // Default constructor required for Firebase
+    }
     public Skill(String skill, String category) {
         this.skill = skill;
         this.category = category;
