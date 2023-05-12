@@ -8,20 +8,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.skillswap.R;
+import com.example.skillswap.models.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TeachSkillAdapter extends RecyclerView.Adapter<TeachSkillAdapter.ViewHolder> {
-    private List<String> mSkillsList;
+    private List<Skill> mSkillsList;
     private OnItemClickListener mOnItemClickListener;
 
-    public TeachSkillAdapter(List<String> skills,OnItemClickListener listener) {
+    public TeachSkillAdapter(List<Skill> skills,OnItemClickListener listener) {
         mSkillsList = skills;
         mOnItemClickListener = listener;
     }
 
-    public void setSkillsList(List<String> skillsList) {
+    public void setSkillsList(List<Skill> skillsList) {
         mSkillsList = new ArrayList<>();
         mSkillsList.addAll(skillsList);
         notifyDataSetChanged();
@@ -59,12 +60,13 @@ public class TeachSkillAdapter extends RecyclerView.Adapter<TeachSkillAdapter.Vi
             skillBtn = itemView.findViewById(R.id.skillBtn);
         }
 
-        public void bind(String skill) {
-            skillBtn.setText(skill);
+        public void bind(Skill skill) {
+            skillBtn.setText(skill.getSkill());
         }
     }
 
     public interface OnItemClickListener{
-        void onSkillClicked(String skill);
+        void onSkillClicked(Skill skill);
     }
 }
+

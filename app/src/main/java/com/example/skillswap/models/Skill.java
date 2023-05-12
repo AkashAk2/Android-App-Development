@@ -3,41 +3,53 @@ package com.example.skillswap.models;
 public class Skill {
     private String skill;
     private String category;
-    private boolean isAdded;
-    private long date;
+
+    private long addedDate;
+
+    private boolean isEnabled;
+
     private String skillId;
 
-    public Skill() {
-        // Default constructor required for Firebase
+
+    public Skill(){
+
     }
     public Skill(String skill, String category) {
         this.skill = skill;
         this.category = category;
     }
 
-    public boolean isAdded() {
-        return isAdded;
-    }
-
-    public void setAdded(boolean added) {
-        isAdded = added;
-    }
-
-    public Skill(String skill, String category, long date, boolean isAdded, String skillId) {
+    public Skill(String skill, String category, long addedDate, boolean isEnabled, String skillId) {
         this.skill = skill;
         this.category = category;
-        this.date = date;
-        this.isAdded = isAdded;
+        this.addedDate = addedDate;
+        this.isEnabled = isEnabled;
         this.skillId = skillId;
     }
 
-    public String getSkillId() {return skillId;}
+    public long getAddedDate() {
+        return addedDate;
+    }
 
-    public void setSkillId(String skillId) {this.skillId = skillId;}
+    public void setAddedDate(long addedDate) {
+        this.addedDate = addedDate;
+    }
 
-    public long getDate() {return date;}
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 
-    public void setDate(long date) {this.date = date;}
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public String getSkillId() {
+        return skillId;
+    }
+
+    public void setSkillId(String skillId) {
+        this.skillId = skillId;
+    }
 
     public String getSkill() {
         return skill;
@@ -60,8 +72,8 @@ public class Skill {
         return "Skill{" +
                 "skill='" + skill + '\'' +
                 ", category='" + category + '\'' +
-                ", isAdded=" + isAdded +
-                ", date=" + date +
+                ", addedDate=" + addedDate +
+                ", isEnabled=" + isEnabled +
                 ", skillId='" + skillId + '\'' +
                 '}';
     }

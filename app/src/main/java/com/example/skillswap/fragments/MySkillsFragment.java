@@ -1,6 +1,7 @@
 package com.example.skillswap.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +73,7 @@ public class MySkillsFragment extends Fragment {
 
         SkillAdapter adapter = new SkillAdapter(null, new SkillAdapter.OnItemClickListener() {
             @Override
-            public void onSkillClicked(String skill) {
+            public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
                         .setMessage("Do you want to delete the skill "+skill+"?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -102,7 +103,7 @@ public class MySkillsFragment extends Fragment {
         learnSkillRecyclerView.setAdapter(adapter);
         TeachSkillAdapter teachAdapter = new TeachSkillAdapter(null, new TeachSkillAdapter.OnItemClickListener() {
             @Override
-            public void onSkillClicked(String skill) {
+            public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
                         .setMessage("Do you want to delete the skill " + skill + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -140,14 +141,17 @@ public class MySkillsFragment extends Fragment {
         });
 
 
-        mMySkillViewModel.mListLiveData.observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mMySkillViewModel.mListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Skill>>() {
             @Override
-            public void onChanged(List<String> skills) {
+            public void onChanged(List<Skill> skills) {
                 if (skills.size() >= 4)
                     learnAddSkillBtn.setVisibility(View.GONE);
                 else
                     learnAddSkillBtn.setVisibility(View.VISIBLE);
                 adapter.setSkillsList(skills);
+                for (Skill skill:skills){
+                    Log.d("TAG",skill.toString());
+                }
             }
 
         });
@@ -160,14 +164,17 @@ public class MySkillsFragment extends Fragment {
             }
         });
 
-        mMySkillViewModel.tListLiveData.observe(getViewLifecycleOwner(), new Observer<List<String>>() {
+        mMySkillViewModel.tListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Skill>>() {
             @Override
-            public void onChanged(List<String> skills) {
+            public void onChanged(List<Skill> skills) {
                 if (skills.size() >= 4)
                     teachAddSkillBtn.setVisibility(View.GONE);
                 else
                     teachAddSkillBtn.setVisibility(View.VISIBLE);
                 teachAdapter.setSkillsList(skills);
+                for (Skill skill:skills){
+                    Log.d("TAG",skill.toString());
+                }
             }
 
         });
@@ -187,4 +194,4 @@ public class MySkillsFragment extends Fragment {
 
     }
 
-}
+    }

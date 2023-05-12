@@ -28,14 +28,16 @@ public class MySkillViewModel extends ViewModel {
     }
 
     public void setSelectedSkill(Skill skill, SkillType skillType, Result.CallBack callBack) {
+        skill.setEnabled(true);
+        skill.setAddedDate(System.currentTimeMillis());
         addSkillToUser(skill, skillType, callBack);
     }
 
-    private MutableLiveData<List<String>> mListMutableLiveData = new MutableLiveData<>(new ArrayList<>());
-    public LiveData<List<String>> mListLiveData = mListMutableLiveData;
+    private MutableLiveData<List<Skill>> mListMutableLiveData = new MutableLiveData<>(new ArrayList<>());
+    public LiveData<List<Skill>> mListLiveData = mListMutableLiveData;
 
-    private MutableLiveData<List<String>> tListMutableLiveData = new MutableLiveData<>(new ArrayList<>());
-    public LiveData<List<String>> tListLiveData = tListMutableLiveData;
+    private MutableLiveData<List<Skill>> tListMutableLiveData = new MutableLiveData<>(new ArrayList<>());
+    public LiveData<List<Skill>> tListLiveData = tListMutableLiveData;
 
     private MutableLiveData<SkillType> mSkillTypeMutableLiveData = new MutableLiveData<>(SkillType.LEARN_SKILL);
     public LiveData<SkillType> mSkillTypeLiveData = mSkillTypeMutableLiveData;
@@ -45,7 +47,7 @@ public class MySkillViewModel extends ViewModel {
     }
 
 
-    public void addSkillToUser(Skill skill, SkillType skillType, Result.CallBack callBack) {
+    void addSkillToUser(Skill skill, SkillType skillType, Result.CallBack callBack) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null)
             return;
@@ -61,7 +63,9 @@ public class MySkillViewModel extends ViewModel {
                 callBack.response(new Result.Error(new Exception("Skill already available!")));
                 return;
             }
-            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkill()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            String uniqueId = mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
+            skill.setSkillId(uniqueId);
+            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success("Skill added successfully!"));
@@ -83,7 +87,9 @@ public class MySkillViewModel extends ViewModel {
                 callBack.response(new Result.Error(new Exception("Skill already available!")));
                 return;
             }
-            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkill()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            String uniqueId = teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
+            skill.setSkillId(uniqueId);
+            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success("Skill added successfully!"));
@@ -97,13 +103,13 @@ public class MySkillViewModel extends ViewModel {
         }
     }
 
-    public void removeSkillForUser(String skill, SkillType skillType, Result.CallBack callBack) {
+    public void removeSkillForUser(Skill skill, SkillType skillType, Result.CallBack callBack) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null)
             return;
 
         if (skillType == SkillType.LEARN_SKILL) {
-            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success(true));
@@ -115,7 +121,7 @@ public class MySkillViewModel extends ViewModel {
                 }
             });
         } else {
-            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success(true));
@@ -136,9 +142,9 @@ public class MySkillViewModel extends ViewModel {
         mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> newList = new ArrayList<>();
+                List<Skill> newList = new ArrayList<>();
                 for (DataSnapshot d : snapshot.getChildren()) {
-                    newList.add(Objects.requireNonNull(d.getValue(Skill.class)).getSkill());
+                    newList.add(Objects.requireNonNull(d.getValue(Skill.class)));
                 }
                 mListMutableLiveData.setValue(newList);
             }
@@ -152,9 +158,9 @@ public class MySkillViewModel extends ViewModel {
         teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<String> newList = new ArrayList<>();
+                List<Skill> newList = new ArrayList<>();
                 for (DataSnapshot d : snapshot.getChildren()) {
-                    newList.add(Objects.requireNonNull(d.getValue(Skill.class)).getSkill());
+                    newList.add(Objects.requireNonNull(d.getValue(Skill.class)));
                 }
                 tListMutableLiveData.setValue(newList);
             }

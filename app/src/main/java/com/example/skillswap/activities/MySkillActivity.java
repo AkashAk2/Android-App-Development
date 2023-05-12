@@ -33,12 +33,12 @@ public class MySkillActivity extends BaseActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-    }
+        }
 
-    @Override
-    public boolean onSupportNavigateUp() {
+@Override
+public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_my_skill);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-}
+        || super.onSupportNavigateUp();
+        }
+        }
