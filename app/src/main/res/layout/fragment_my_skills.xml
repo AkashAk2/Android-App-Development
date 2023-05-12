@@ -43,8 +43,6 @@
         android:padding="18dp"
         android:text="I want to learn" />
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/learnSkillRecyclerView"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -88,4 +86,76 @@
         android:layout_marginEnd="16dp"
         android:text="Add Skill" />
 
+    <!-- Chart Views and Date Picker -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Toggle button to switch between Bar Graph and Pie Chart -->
+        <ToggleButton
+            android:id="@+id/toggle_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:textOff="Bar Graph"
+            android:textOn="Pie Chart" />
+
+        <TextView
+            android:id="@+id/start_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date:"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/start_date_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Select start date"
+            android:inputType="date"
+            android:textColorHint="#cccccc"
+            android:textColor="#ffffff" />
+
+        <!-- End Date Picker -->
+        <TextView
+            android:id="@+id/end_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Date:"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/end_date_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Select end date"
+            android:inputType="date"
+            android:textColorHint="#cccccc"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+    <!-- Chart Views -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
 </LinearLayout>
+
+
+
