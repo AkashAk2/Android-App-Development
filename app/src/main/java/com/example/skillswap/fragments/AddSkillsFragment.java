@@ -1,4 +1,5 @@
 package com.example.skillswap.fragments;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;

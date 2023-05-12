@@ -15,7 +15,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class MySkillViewModel extends ViewModel {
@@ -42,12 +45,14 @@ public class MySkillViewModel extends ViewModel {
     private MutableLiveData<SkillType> mSkillTypeMutableLiveData = new MutableLiveData<>(SkillType.LEARN_SKILL);
     public LiveData<SkillType> mSkillTypeLiveData = mSkillTypeMutableLiveData;
 
+    public Map<String, Integer> skillCatCount = new HashMap<>();
+
     public void setSelectedSkillType(SkillType skillType){
         mSkillTypeMutableLiveData.setValue(skillType);
     }
 
 
-    void addSkillToUser(Skill skill, SkillType skillType, Result.CallBack callBack) {
+    public void addSkillToUser(Skill skill, SkillType skillType, Result.CallBack callBack) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null)
             return;
@@ -171,6 +176,39 @@ public class MySkillViewModel extends ViewModel {
             }
         });
 
+    }
+
+    public void getSkillsInRange(Date startDate, Date endDate, SkillType skillType, Result.CallBack callBack) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null)
+            return;
+
+        DatabaseReference skillsRef = skillType == SkillType.LEARN_SKILL ? mySkillRefs : teachSkillRefs;
+        String userId = firebaseAuth.getCurrentUser().getUid();
+
+        skillsRef.child(userId).orderByChild("addedDate").startAt(startDate.getTime()).endAt(endDate.getTime())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot skillSnapshot : snapshot.getChildren()) {
+                            Skill skill = skillSnapshot.getValue(Skill.class);
+                            if (skill != null) {
+                                String category = skill.getCategory();
+                                if (!skillCatCount.containsKey(category)) {
+                                    skillCatCount.put(category, 1);
+                                } else {
+                                    skillCatCount.put(category, skillCatCount.get(category) + 1);
+                                }
+                            }
+                        }
+                        callBack.response(new Result.Success(skillCatCount));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        callBack.response(new Result.Error(error.toException()));
+                    }
+                });
     }
 
 }
