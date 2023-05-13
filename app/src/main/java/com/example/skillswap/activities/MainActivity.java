@@ -2,6 +2,7 @@ package com.example.skillswap.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.skillswap.R;
+import com.example.skillswap.adapters.PeopleAdapter;
 import com.example.skillswap.adapters.UserAdapter;
 import com.example.skillswap.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,12 +38,18 @@ public class MainActivity extends BaseActivity {
 
     private List<User> userList = new ArrayList<>();
     private UserAdapter userAdapter;
+    private PeopleAdapter peopleAdapter;
+    private List<String> peopleList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        peopleAdapter = new PeopleAdapter(peopleList, MainActivity.this, currentUser);
+
 
         ImageView profileImageView = findViewById(R.id.profileImageView);
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
@@ -51,10 +59,15 @@ public class MainActivity extends BaseActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         skillRecommendationsRecyclerView.setLayoutManager(layoutManager);
         skillRecommendationsRecyclerView.setAdapter(userAdapter);
+        RecyclerView peopleRecyclerView = findViewById(R.id.peopleRecyclerView);
+        peopleAdapter = new PeopleAdapter(peopleList, MainActivity.this, currentUser);
+        RecyclerView.LayoutManager peopleLayoutManager = new LinearLayoutManager(MainActivity.this);
+        peopleRecyclerView.setLayoutManager(peopleLayoutManager);
+        peopleRecyclerView.setAdapter(peopleAdapter);
 
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -72,9 +85,47 @@ public class MainActivity extends BaseActivity {
                         User user = dataSnapshot.getValue(User.class);
                         if (user != null) {
                             welcomeTextView.setText("Hello, " + user.getFirstName() + "!");
+
+                            // Get reference to current user's connections
+                            DatabaseReference connectionsRef = FirebaseDatabase.getInstance()
+                                    .getReference("connections")
+                                    .child(currentUser.getUid());
+
+
+                            // Retrieve current user's connections
+                            connectionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        String connectedUserId = snapshot.getKey();
+
+                                        // Retrieve connected user's details
+
+                                        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(connectedUserId);
+                                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                User connectedUser = dataSnapshot.getValue(User.class);
+                                                peopleAdapter.addUser(connectedUserId);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                // Handle possible errors.
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    // Handle possible errors.
+                                }
+                            });
                         }
                     }
                 }
+
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -141,7 +192,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle possible errors.
+                Log.d("MainActivityClass", "Firebase error: " + databaseError.getMessage());
             }
         });
     }
@@ -152,6 +203,7 @@ public class MainActivity extends BaseActivity {
         // Minimize the app when the back button is pressed on the main activity
         moveTaskToBack(true);
     }
+
 
 
     @Override

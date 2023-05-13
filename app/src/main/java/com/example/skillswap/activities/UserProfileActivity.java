@@ -10,6 +10,10 @@ import android.widget.TextView;
 
 import com.example.skillswap.R;
 import com.example.skillswap.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UserProfileActivity extends AppCompatActivity {
 
@@ -30,11 +34,46 @@ public class UserProfileActivity extends AppCompatActivity {
         // Set other fields
 
         Button addButton = findViewById(R.id.addButton);
+        Button cancelButton = findViewById(R.id.cancelButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add the user to your people list
+                // Get current user's ID
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null) {
+                    String currentUserId = currentUser.getUid();
+
+                    // Get reference to current user's connections
+                    DatabaseReference connectionsRef = FirebaseDatabase.getInstance()
+                            .getReference("connections")
+                            .child(currentUserId);
+
+                    // Sanitize the email
+                    String sanitizedEmail = user.getEmail().replace('.', ',');
+
+                    String originalEmail = sanitizedEmail.replace(',', '.');
+
+
+                    // Add user to current user's connections using user's uid
+                    connectionsRef.child(user.getUid()).setValue(true);
+
+
+                    Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                }
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 }

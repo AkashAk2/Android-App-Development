@@ -340,7 +340,7 @@ public class ProfileActivity extends BaseActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            User updatedUser = new User(firstName, lastName, dob, mobileNumber, currentUser.getEmail());
+            User updatedUser = new User(userId,firstName, lastName, dob, mobileNumber, currentUser.getEmail());
 
             mDatabase.child("users").child(userId).setValue(updatedUser)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

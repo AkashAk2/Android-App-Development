@@ -60,4 +60,16 @@
         app:layout_constraintTop_toBottomOf="@+id/emailTextView"
         android:layout_marginTop="16dp" />
 
+    <Button
+        android:id="@+id/cancelButton"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:backgroundTint="#ED2B2A"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addButton"
+        android:layout_marginTop="16dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
