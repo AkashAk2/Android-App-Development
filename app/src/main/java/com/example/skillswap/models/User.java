@@ -1,6 +1,7 @@
 package com.example.skillswap.models;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     private String firstName;
     private String lastName;
 
