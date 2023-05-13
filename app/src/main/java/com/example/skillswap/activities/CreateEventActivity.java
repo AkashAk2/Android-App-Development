@@ -19,6 +19,7 @@ import com.example.skillswap.models.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -46,7 +47,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
-        eventRef = FirebaseDatabase.getInstance().getReference().child("events");
+        eventRef = FirebaseDatabase.getInstance().getReference().child("user");
 
         // Initialize views
         editTextTitle = findViewById(R.id.editTextTitle);
@@ -75,7 +76,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 String title = editTextTitle.getText().toString().trim();
                 String description = editTextDescription.getText().toString().trim();
                 String location = editTextLocation.getText().toString().trim();
-                String emailid = "testemail@gmail.com";
+                //String emailid = "testemail@gmail.com";
 
                 // Get selected date from DatePicker
                 int day = datePicker.getDayOfMonth();
@@ -89,9 +90,11 @@ public class CreateEventActivity extends AppCompatActivity {
                 // Get the timestamp representing the selected date
                 long timestamp = calendar.getTimeInMillis();
 
+
+                FirebaseUser user = mAuth.getCurrentUser();
                 // Create an Event object
                 // Create a new instance of the Event class
-                Event newEvent = new Event(emailid, title, description, location, timestamp);
+                Event newEvent = new Event(user.getUid(), title, description, location, timestamp);
 
                 // Generate a unique identifier for the event
                 String eventId = eventRef.push().getKey();
