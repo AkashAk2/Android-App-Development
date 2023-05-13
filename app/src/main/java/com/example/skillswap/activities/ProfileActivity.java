@@ -27,11 +27,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class ProfileActivity extends BaseActivity {
@@ -124,10 +129,12 @@ public class ProfileActivity extends BaseActivity {
         saveProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUserProfile();
-                toggleEdit(false);
-                editProfileButton.setVisibility(View.VISIBLE);
-                saveProfileButton.setVisibility(View.GONE);
+                if (validateFields()) {
+                    updateUserProfile();
+                    toggleEdit(false);
+                    editProfileButton.setVisibility(View.VISIBLE);
+                    saveProfileButton.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -195,6 +202,88 @@ public class ProfileActivity extends BaseActivity {
             }
         }
     }
+
+    private boolean validateFields() {
+        String firstName = firstNameEditText.getText().toString().trim();
+        String lastName = lastNameEditText.getText().toString().trim();
+        String mobileNumber = mobileNumberEditText.getText().toString().trim();
+        String dob = dobEditText.getText().toString().trim();
+
+        if (firstName.isEmpty()) {
+            firstNameEditText.setError("Please enter your first name");
+            return false;
+        }
+
+        if (!isValidName(firstName)) {
+            firstNameEditText.setError("First name should not contain special characters");
+            return false;
+        }
+
+        if (lastName.isEmpty()) {
+            lastNameEditText.setError("Please enter your last name");
+            return false;
+        }
+
+        if (!isValidName(lastName)) {
+            lastNameEditText.setError("Last name should not contain numeric or special characters");
+            return false;
+        }
+
+        if (mobileNumber.isEmpty()) {
+            mobileNumberEditText.setError("Please enter your mobile number");
+            return false;
+        }
+
+        if (!isValidAustralianPhoneNumber(mobileNumber)) {
+            mobileNumberEditText.setError("Please enter a valid Australian phone number");
+            return false;
+        }
+
+        if (dob.isEmpty()) {
+            dobEditText.setError("Please select your date of birth");
+            return false;
+        }
+
+        if (!isValidDateOfBirth(dob)) {
+            dobEditText.setError("Please enter a valid date of birth");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidName(String name) {
+        // Regular expression to allow only alphabets and spaces
+        String regex = "^[a-zA-Z0-9\\s]+$";
+        return name.matches(regex);
+    }
+
+    private boolean isValidAustralianPhoneNumber(String phoneNumber) {
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber auNumber = phoneNumberUtil.parse(phoneNumber, "AU");
+            return phoneNumberUtil.isValidNumberForRegion(auNumber, "AU");
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean isValidDateOfBirth(String dob) {
+        // Perform your custom validation logic for date of birth
+        // Example: Check if the date is not in the future
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        Date currentDate = new Date();
+        Date dateOfBirth;
+        try {
+            dateOfBirth = dateFormat.parse(dob);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return dateOfBirth.before(currentDate);
+    }
+
 
     private void toggleEdit(boolean editable) {
         firstNameEditText.setEnabled(editable);
