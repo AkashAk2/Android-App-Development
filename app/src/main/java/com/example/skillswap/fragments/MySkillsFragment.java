@@ -1,11 +1,17 @@
 package com.example.skillswap.fragments;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,35 +22,39 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.skillswap.models.MySkillViewModel;
 import com.example.skillswap.R;
-import com.example.skillswap.models.Result;
-import com.example.skillswap.models.Skill;
 import com.example.skillswap.adapters.SkillAdapter;
 import com.example.skillswap.adapters.TeachSkillAdapter;
+import com.example.skillswap.databinding.FragmentMySkillsBinding;
+import com.example.skillswap.models.MySkillViewModel;
+import com.example.skillswap.models.Result;
+import com.example.skillswap.models.Skill;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.material.slider.LabelFormatter;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.skillswap.R;
-
-import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MySkillsFragment extends Fragment {
 
@@ -52,11 +62,16 @@ public class MySkillsFragment extends Fragment {
     private RecyclerView learnSkillRecyclerView, teachSkillRecyclerView;
     private Button learnAddSkillBtn, teachAddSkillBtn;
     private MySkillViewModel mMySkillViewModel;
+    private Map<String, Integer> skillCatCountLearnSkill = new HashMap<>();
+    private List<Skill> mLearnSkills = new ArrayList<>();
+    private List<Skill> mTeachSkills = new ArrayList<>();
+    private FragmentMySkillsBinding mBinding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_skills, container, false);
+        mBinding = FragmentMySkillsBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     @Override
@@ -75,7 +90,7 @@ public class MySkillsFragment extends Fragment {
             @Override
             public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
-                        .setMessage("Do you want to delete the skill "+skill+"?")
+                        .setMessage("Do you want to delete the skill " + skill + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -144,14 +159,17 @@ public class MySkillsFragment extends Fragment {
         mMySkillViewModel.mListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Skill>>() {
             @Override
             public void onChanged(List<Skill> skills) {
-                if (skills.size() >= 4)
+                if(skills.stream().filter(Skill::isEnabled).count() >= 4)
                     learnAddSkillBtn.setVisibility(View.GONE);
                 else
                     learnAddSkillBtn.setVisibility(View.VISIBLE);
-                adapter.setSkillsList(skills);
-                for (Skill skill:skills){
-                    Log.d("TAG",skill.toString());
-                }
+                adapter.setSkillsList(skills.stream().filter(Skill::isEnabled).collect(Collectors.toList()));
+
+                mLearnSkills.clear();
+                mLearnSkills.addAll(skills);
+                populateGraphs();
+
+
             }
 
         });
@@ -167,13 +185,13 @@ public class MySkillsFragment extends Fragment {
         mMySkillViewModel.tListLiveData.observe(getViewLifecycleOwner(), new Observer<List<Skill>>() {
             @Override
             public void onChanged(List<Skill> skills) {
-                if (skills.size() >= 4)
+                if (skills.stream().filter(Skill::isEnabled).count() >= 4)
                     teachAddSkillBtn.setVisibility(View.GONE);
                 else
                     teachAddSkillBtn.setVisibility(View.VISIBLE);
-                teachAdapter.setSkillsList(skills);
-                for (Skill skill:skills){
-                    Log.d("TAG",skill.toString());
+                teachAdapter.setSkillsList(skills.stream().filter(Skill::isEnabled).collect(Collectors.toList()));
+                for (Skill skill : skills) {
+                    Log.d("TAG", skill.toString());
                 }
             }
 
@@ -192,6 +210,197 @@ public class MySkillsFragment extends Fragment {
             }
         });
 
-    }
+
+        mBinding.startDateEt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance(Locale.getDefault());
+                new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Calendar cal = Calendar.getInstance(Locale.getDefault());
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                        mBinding.startDateEt.setText(dateFormat.format(cal.getTime()));
+                        populateGraphs();
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        mBinding.endDateEdittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance(Locale.getDefault());
+                new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Calendar cal = Calendar.getInstance(Locale.getDefault());
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+                        mBinding.endDateEdittext.setText(dateFormat.format(cal.getTime()));
+                        populateGraphs();
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        mBinding.toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayGraphsOrChart();
+            }
+        });
+
 
     }
+
+    private void populateGraphs() {
+        String startDate = mBinding.startDateEt.getText().toString();
+        String endDate = mBinding.endDateEdittext.getText().toString();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+        if (!TextUtils.isEmpty(startDate) && !TextUtils.isEmpty(endDate)) {
+            try {
+                long startDateTime = dateFormat.parse(startDate).getTime();
+                long endDateTime = dateFormat.parse(endDate).getTime();
+                skillCatCountLearnSkill.clear();
+                for (Skill skill : mLearnSkills) {
+                    long addedDate = dateFormat.parse(dateFormat.format(skill.getAddedDate())).getTime();
+                    if (addedDate >= startDateTime && addedDate <= endDateTime) {
+                        String category = skill.getCategory();
+                        if (!skillCatCountLearnSkill.containsKey(category)) {
+                            skillCatCountLearnSkill.put(category, 1);
+                        } else {
+                            skillCatCountLearnSkill.put(category, skillCatCountLearnSkill.get(category) + 1);
+                        }
+                    }
+                }
+                displayGraphsOrChart();
+
+            } catch (ParseException | NullPointerException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void displayGraphsOrChart() {
+
+        if (mBinding.toggleButton.getText().equals(getString(R.string.bar_graph))) {
+            mBinding.barChart.setVisibility(View.VISIBLE);
+            mBinding.pieChart.setVisibility(View.GONE);
+            setupAndDisplayBarGraph();
+        } else {
+            mBinding.barChart.setVisibility(View.GONE);
+            mBinding.pieChart.setVisibility(View.VISIBLE);
+            setupPieChart();
+            loadPieChartData(skillCatCountLearnSkill);
+        }
+    }
+
+    private void setupPieChart() {
+        PieChart pieChart = mBinding.pieChart;
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setUsePercentValues(true);
+        pieChart.setEntryLabelTextSize(16);
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setCenterTextSize(18);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setDrawEntryLabels(false);
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setWordWrapEnabled(true);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setEnabled(true);
+    }
+
+    private void loadPieChartData(Map<String, Integer> skillCatCountLearnSkill) {
+        PieChart pieChart = mBinding.pieChart;
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        int totalCat = 0;
+        for (String key : skillCatCountLearnSkill.keySet()) {
+            totalCat += skillCatCountLearnSkill.get(key);
+        }
+        for (String key : skillCatCountLearnSkill.keySet()) {
+            Log.d("TAG", key + ":" + skillCatCountLearnSkill.get(key));
+            entries.add(new PieEntry(skillCatCountLearnSkill.get(key) / Float.valueOf(totalCat), key));
+        }
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color : ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        for (int color : ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(true);
+        data.setValueFormatter(new PercentFormatter(new DecimalFormat("###,###,##0")));
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.BLACK);
+
+        pieChart.setData(data);
+        pieChart.invalidate();
+
+        //pieChart.animateY(1400, Easing.EasingOption);
+    }
+
+    private void setupAndDisplayBarGraph() {
+        BarChart barChart = mBinding.barChart;
+
+        int totalCat = 0;
+        for (String key : skillCatCountLearnSkill.keySet()) {
+            totalCat += skillCatCountLearnSkill.get(key);
+        }
+        // Create an ArrayList of BarEntry objects
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        int index = 0;
+        for (String key : skillCatCountLearnSkill.keySet()) {
+            barEntries.add(new BarEntry(index++, skillCatCountLearnSkill.get(key)));
+        }
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color : ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        for (int color : ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+
+        // Create a BarDataSet object
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Data Set");
+
+        // Set the colors of the bars
+        barDataSet.setColors(colors);
+
+        // Create a BarData object and add the BarDataSet to it
+        BarData barData = new BarData(barDataSet);
+
+        // Customize the chart
+        barChart.setData(barData);
+        barChart.setDrawGridBackground(false);
+        barChart.setDrawBorders(false);
+        barChart.getDescription().setEnabled(false);
+        barChart.getLegend().setEnabled(false);
+
+        // Refresh the chart
+        barChart.invalidate();
+    }
+
+
+
+
+}

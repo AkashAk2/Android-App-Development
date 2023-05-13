@@ -1,161 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:backgroundTint="#146C94"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- Username -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:backgroundTint="#146C94"
+        android:orientation="vertical">
 
+        <!-- Username -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/username_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="24sp" />
+
+            <!-- Select role -->
+            <Spinner
+                android:id="@+id/role_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:prompt="@string/role_spinner_prompt"
+                android:entries="@array/roles"
+                android:padding="16dp"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@android:color/white" />
+
+        </LinearLayout>
+
+        <!-- Skills to learn -->
         <TextView
-            android:id="@+id/username_textview"
+            android:id="@+id/learn_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="24sp" />
+            android:padding="18dp"
+            android:text="I want to learn" />
 
-        <!-- Select role -->
-        <Spinner
-            android:id="@+id/role_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:prompt="@string/role_spinner_prompt"
-            android:entries="@array/roles"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/learnSkillRecyclerView"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
             android:padding="16dp"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@android:color/white" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    </LinearLayout>
-
-    <!-- Skills to learn -->
-    <TextView
-        android:id="@+id/learn_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="18dp"
-        android:text="I want to learn" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/learnSkillRecyclerView"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/learnAddSkillBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#2196F3"
-        android:layout_gravity="end"
-        android:layout_marginEnd="16dp"
-        android:text="Add Skill" />
-
-    <!-- Skills to teach -->
-
-    <TextView
-        android:id="@+id/teach_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="18dp"
-        android:text="I can teach" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/teachSkillRecyclerView"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
-        android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/teachAddSkillBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#2196F3"
-        android:layout_gravity="end"
-        android:layout_marginEnd="16dp"
-        android:text="Add Skill" />
-
-    <!-- Chart Views and Date Picker -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <!-- Toggle button to switch between Bar Graph and Pie Chart -->
-        <ToggleButton
-            android:id="@+id/toggle_button"
+        <Button
+            android:id="@+id/learnAddSkillBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:textOff="Bar Graph"
-            android:textOn="Pie Chart" />
+            android:backgroundTint="#2196F3"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:text="Add Skill" />
+
+        <!-- Skills to teach -->
 
         <TextView
-            android:id="@+id/start_date_textview"
+            android:id="@+id/teach_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Date:"
-            android:textColor="#ffffff"
-            android:textSize="18sp" />
+            android:padding="18dp"
+            android:text="I can teach" />
 
-        <EditText
-            android:id="@+id/start_date_edittext"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Select start date"
-            android:inputType="date"
-            android:textColorHint="#cccccc"
-            android:textColor="#ffffff" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/teachSkillRecyclerView"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <!-- End Date Picker -->
-        <TextView
-            android:id="@+id/end_date_textview"
+        <Button
+            android:id="@+id/teachAddSkillBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Date:"
-            android:textColor="#ffffff"
-            android:textSize="18sp" />
+            android:backgroundTint="#2196F3"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:text="Add Skill" />
 
-        <EditText
-            android:id="@+id/end_date_edittext"
-            android:layout_width="0dp"
+        <!-- Chart Views and Date Picker -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Toggle button to switch between Bar Graph and Pie Chart -->
+
+
+            <EditText
+                android:id="@+id/startDateEt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:hint="Start Date"
+                android:inputType="none"
+                android:layout_marginStart="8dp"
+                android:textColorHint="#cccccc"
+                />
+
+            <!-- End Date Picker -->
+
+
+            <EditText
+                android:id="@+id/end_date_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="End Date"
+                android:focusable="false"
+                android:layout_marginStart="16dp"
+                android:inputType="none"
+                android:textColorHint="#cccccc"
+                />
+            <ToggleButton
+                android:id="@+id/toggle_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"
+                android:textOff="@string/bar_graph"
+                android:textOn="@string/pie_chart" />
+
+        </LinearLayout>
+
+        <!-- Chart Views -->
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
             android:layout_weight="1"
-            android:hint="Select end date"
-            android:inputType="date"
-            android:textColorHint="#cccccc"
-            android:textColor="#ffffff" />
+            />
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_weight="1" />
+
+
     </LinearLayout>
-
-    <!-- Chart Views -->
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bar_chart"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pie_chart"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
-</LinearLayout>
+</ScrollView>
 
 
 

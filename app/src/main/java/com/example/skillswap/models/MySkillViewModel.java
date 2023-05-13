@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.skillswap.adapters.SkillAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,12 +15,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MySkillViewModel extends ViewModel {
 
@@ -45,7 +49,7 @@ public class MySkillViewModel extends ViewModel {
     private MutableLiveData<SkillType> mSkillTypeMutableLiveData = new MutableLiveData<>(SkillType.LEARN_SKILL);
     public LiveData<SkillType> mSkillTypeLiveData = mSkillTypeMutableLiveData;
 
-    public Map<String, Integer> skillCatCount = new HashMap<>();
+
 
     public void setSelectedSkillType(SkillType skillType){
         mSkillTypeMutableLiveData.setValue(skillType);
@@ -60,11 +64,11 @@ public class MySkillViewModel extends ViewModel {
         if (skillType == SkillType.LEARN_SKILL) {
             if (mListLiveData.getValue() == null)
                 return;
-            if (mListLiveData.getValue().size() == 4) {
+            if (mListLiveData.getValue().stream().filter(Skill::isEnabled).count() >= 4) {
                 callBack.response(new Result.Error(new Exception("Only 4 skills can be added!")));
                 return;
             }
-            if(mListLiveData.getValue().contains(skill.getSkill())){
+            if(mListLiveData.getValue().stream().filter(Skill::isEnabled).map(Skill::getSkill).collect(Collectors.toList()).contains(skill.getSkill())){
                 callBack.response(new Result.Error(new Exception("Skill already available!")));
                 return;
             }
@@ -84,14 +88,15 @@ public class MySkillViewModel extends ViewModel {
         } else {
             if (tListLiveData.getValue() == null)
                 return;
-            if (tListLiveData.getValue().size() == 4) {
+            if (tListLiveData.getValue().stream().filter(Skill::isEnabled).count() >= 4) {
                 callBack.response(new Result.Error(new Exception("Only 4 skills can be added!")));
                 return;
             }
-            if(tListLiveData.getValue().contains(skill.getSkill())){
+            if(tListLiveData.getValue().stream().filter(Skill::isEnabled).map(Skill::getSkill).collect(Collectors.toList()).contains(skill.getSkill())){
                 callBack.response(new Result.Error(new Exception("Skill already available!")));
                 return;
             }
+
             String uniqueId = teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
             skill.setSkillId(uniqueId);
             teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -113,8 +118,9 @@ public class MySkillViewModel extends ViewModel {
         if (firebaseAuth.getCurrentUser() == null)
             return;
 
+        skill.setEnabled(false);
         if (skillType == SkillType.LEARN_SKILL) {
-            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success(true));
@@ -126,7 +132,7 @@ public class MySkillViewModel extends ViewModel {
                 }
             });
         } else {
-            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     callBack.response(new Result.Success(true));
@@ -175,40 +181,6 @@ public class MySkillViewModel extends ViewModel {
                 callBack.response(new Result.Error(new Exception("Failed to fetch skills!")));
             }
         });
-
-    }
-
-    public void getSkillsInRange(Date startDate, Date endDate, SkillType skillType, Result.CallBack callBack) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        if (firebaseAuth.getCurrentUser() == null)
-            return;
-
-        DatabaseReference skillsRef = skillType == SkillType.LEARN_SKILL ? mySkillRefs : teachSkillRefs;
-        String userId = firebaseAuth.getCurrentUser().getUid();
-
-        skillsRef.child(userId).orderByChild("addedDate").startAt(startDate.getTime()).endAt(endDate.getTime())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot skillSnapshot : snapshot.getChildren()) {
-                            Skill skill = skillSnapshot.getValue(Skill.class);
-                            if (skill != null) {
-                                String category = skill.getCategory();
-                                if (!skillCatCount.containsKey(category)) {
-                                    skillCatCount.put(category, 1);
-                                } else {
-                                    skillCatCount.put(category, skillCatCount.get(category) + 1);
-                                }
-                            }
-                        }
-                        callBack.response(new Result.Success(skillCatCount));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        callBack.response(new Result.Error(error.toException()));
-                    }
-                });
     }
 
 }
