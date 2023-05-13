@@ -176,18 +176,32 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void searchUsers(String newText) {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-        Query query = usersRef.orderByChild("firstName").startAt(newText).endAt(newText + "\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
+    private void searchUsers(String skill) {
+        skill = skill.toLowerCase(); // convert skill to lowercase for case-insensitive search
+        DatabaseReference userskills = FirebaseDatabase.getInstance().getReference("userskills").child(skill);
+        userskills.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    userList.add(user);
+                    String uid = snapshot.getKey();
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                            User user = userSnapshot.getValue(User.class);
+                            if (user != null) {
+                                userList.add(user);
+                            }
+                            userAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.d("MainActivityClass", "Firebase error: " + error.getMessage());
+                        }
+                    });
                 }
-                userAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -196,6 +210,7 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
 
 
     @Override
