@@ -33,11 +33,9 @@ import com.example.skillswap.databinding.FragmentMySkillsBinding;
 import com.example.skillswap.models.MySkillViewModel;
 import com.example.skillswap.models.Result;
 import com.example.skillswap.models.Skill;
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -47,7 +45,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.slider.LabelFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -414,6 +411,7 @@ public class MySkillsFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(colors);
+        dataSet.setValueTextColor(Color.WHITE);
 
         PieData data = new PieData(dataSet);
         data.setDrawValues(true);
@@ -423,10 +421,13 @@ public class MySkillsFragment extends Fragment {
         pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setCenterTextColor(Color.WHITE);;
 
+        Legend legend = pieChart.getLegend();
+        legend.setEnabled(true);
+        legend.setTextColor(Color.WHITE);
+
         pieChart.setData(data);
         pieChart.invalidate();
 
-        //pieChart.animateY(1400, Easing.EasingOption);
     }
 
     private void setupAndDisplayBarGraph() {
@@ -452,9 +453,11 @@ public class MySkillsFragment extends Fragment {
             colors.add(color);
         }
 
-
         // Create a BarDataSet object
         BarDataSet barDataSet = new BarDataSet(barEntries, "Data Set");
+
+        // Set the colors of the bars
+        barDataSet.setColors(colors);
 
         // Set the colors of the bars
         barDataSet.setColors(colors);
@@ -464,6 +467,7 @@ public class MySkillsFragment extends Fragment {
 
         // Customize the chart
         barChart.setData(barData);
+        barDataSet.setDrawValues(true);
         barChart.getXAxis().setTextColor(Color.WHITE);
         barChart.getAxisLeft().setTextColor(Color.WHITE);
         barChart.getAxisRight().setTextColor(Color.WHITE);
@@ -471,6 +475,20 @@ public class MySkillsFragment extends Fragment {
         barChart.setDrawBorders(false);
         barChart.getDescription().setEnabled(false);
         barChart.getLegend().setEnabled(false);
+
+        // Create a custom label for the x-axis
+        final String[] labels = new String[skillCatCountLearnSkill.size()];
+        int i = 0;
+        for (String key : skillCatCountLearnSkill.keySet()) {
+            labels[i++] = key;
+        }
+
+        // Set the custom label for the x-axis
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        barChart.getXAxis().setLabelRotationAngle(45); // Rotate the labels by 45 degrees
+        barChart.getXAxis().setCenterAxisLabels(true); // Center the labels between the bars
+        barChart.getXAxis().setGranularity(1f); // Set the granularity to 1 to show all labels
+        barChart.getXAxis().setGranularityEnabled(true); // Enable the granularity setting
 
         // Refresh the chart
         barChart.invalidate();
