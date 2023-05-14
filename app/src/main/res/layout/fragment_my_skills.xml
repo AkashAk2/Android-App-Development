@@ -114,7 +114,8 @@
                 android:hint="Start Date"
                 android:inputType="none"
                 android:layout_marginStart="8dp"
-                android:textColorHint="#cccccc"
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"
                 />
 
             <!-- End Date Picker -->
@@ -124,13 +125,13 @@
                 android:id="@+id/end_date_edittext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="End Date"
-                android:focusable="false"
                 android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:focusable="false"
+                android:hint="End Date"
                 android:inputType="none"
-                android:textColorHint="#cccccc"
-                />
+                android:textColorHint="@color/white"
+                android:textColor="@color/white"/>
 
             <ToggleButton
                 android:id="@+id/toggleButton"
@@ -150,13 +151,13 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"/>
+            android:textColor="@color/white"/>
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/bar_chart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"/>
+            android:textColor="@color/white"/>
 
 
     </LinearLayout>
