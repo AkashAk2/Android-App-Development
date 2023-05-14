@@ -153,7 +153,7 @@ public class MySkillsFragment extends Fragment {
             @Override
             public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
-                        .setMessage("Do you want to delete the skill " + skill + "?")
+                        .setMessage("Do you want to delete the skill " + skill.getSkill() + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -183,7 +183,7 @@ public class MySkillsFragment extends Fragment {
             @Override
             public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
-                        .setMessage("Do you want to delete the skill " + skill + "?")
+                        .setMessage("Do you want to delete the skill " + skill.getSkill() + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
