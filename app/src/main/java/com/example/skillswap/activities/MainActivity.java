@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -12,8 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.skillswap.R;
+import com.example.skillswap.UpdateSkillsWorker;
 import com.example.skillswap.adapters.PeopleAdapter;
 import com.example.skillswap.adapters.UserAdapter;
 import com.example.skillswap.models.User;
@@ -34,6 +38,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends BaseActivity {
     private FirebaseAuth mAuth;
@@ -68,6 +83,8 @@ public class MainActivity extends BaseActivity {
         RecyclerView.LayoutManager peopleLayoutManager = new LinearLayoutManager(MainActivity.this);
         peopleRecyclerView.setLayoutManager(peopleLayoutManager);
         peopleRecyclerView.setAdapter(peopleAdapter);
+
+        Button startWorkButton = findViewById(R.id.startWorkButton);
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -204,6 +221,20 @@ public class MainActivity extends BaseActivity {
         if(currentUser != null && currentUser.isAnonymous()) {
             welcomeTextView.setText("Hello, Guest user!");
         }
+
+        // Set an OnClickListener...
+        startWorkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create a new PeriodicWorkRequest...
+                PeriodicWorkRequest updateSkillsRequest =
+                        new PeriodicWorkRequest.Builder(UpdateSkillsWorker.class, 24, TimeUnit.HOURS)
+                                .build();
+
+                // Enqueue the work...
+                WorkManager.getInstance(MainActivity.this).enqueue(updateSkillsRequest);
+            }
+        });
     }
 
     private void searchUsers(String skill) {

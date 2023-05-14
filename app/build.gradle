@@ -66,6 +66,7 @@ dependencies {
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.32'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'androidx.work:work-runtime:2.8.1' //use the latest version
     //implementation 'com.google.android.gms:play-services-auth:19.2.0'
     //implementation 'com.google.apis:google-api-services-calendar:v3-rev20210922-1.32.1'
 }
