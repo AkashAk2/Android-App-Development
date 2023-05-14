@@ -373,7 +373,7 @@ public class MySkillsFragment extends Fragment {
         pieChart.setDrawHoleEnabled(true);
         pieChart.setUsePercentValues(true);
         pieChart.setEntryLabelTextSize(16);
-        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setEntryLabelColor(Color.WHITE);
         pieChart.setCenterTextSize(18);
         pieChart.getDescription().setEnabled(false);
         pieChart.setDrawEntryLabels(false);
@@ -396,7 +396,7 @@ public class MySkillsFragment extends Fragment {
         }
         for (String key : skillCatCountLearnSkill.keySet()) {
             Log.d("TAG", key + ":" + skillCatCountLearnSkill.get(key));
-            entries.add(new PieEntry(skillCatCountLearnSkill.get(key) / Float.valueOf(totalCat), key));
+            entries.add(new PieEntry(skillCatCountLearnSkill.get(key) / (float) totalCat, key));
         }
 
         ArrayList<Integer> colors = new ArrayList<>();
@@ -415,7 +415,9 @@ public class MySkillsFragment extends Fragment {
         data.setDrawValues(true);
         data.setValueFormatter(new PercentFormatter(new DecimalFormat("###,###,##0")));
         data.setValueTextSize(12f);
-        data.setValueTextColor(Color.BLACK);
+        data.setValueTextColor(Color.WHITE);
+        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setCenterTextColor(Color.WHITE);;
 
         pieChart.setData(data);
         pieChart.invalidate();
@@ -458,6 +460,9 @@ public class MySkillsFragment extends Fragment {
 
         // Customize the chart
         barChart.setData(barData);
+        barChart.getXAxis().setTextColor(Color.WHITE);
+        barChart.getAxisLeft().setTextColor(Color.WHITE);
+        barChart.getAxisRight().setTextColor(Color.WHITE);
         barChart.setDrawGridBackground(false);
         barChart.setDrawBorders(false);
         barChart.getDescription().setEnabled(false);

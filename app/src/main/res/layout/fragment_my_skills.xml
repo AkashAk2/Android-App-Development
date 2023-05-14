@@ -3,13 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appBackground">
+    android:background="@color/appBackground"
+    android:clipToPadding="false"
+    android:paddingBottom="100dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTint="#146C94"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clipToPadding="false">
 
         <!-- Username -->
         <LinearLayout
@@ -24,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="Username"
                 android:textSize="24sp"
+                android:layout_marginEnd="12dp"
                 android:textColor="@color/white"/>
 
             <!-- Select role -->
@@ -37,7 +41,9 @@
                 android:padding="16dp"
                 android:spinnerMode="dropdown"
                 android:textColor="@color/white"
-                android:textColorHint="@color/white"/>
+                android:textColorHint="@color/white"
+                android:textColorPrimary="@color/white"
+                android:background="@color/white"/>
 
         </LinearLayout>
 
@@ -139,10 +145,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:textOff="@string/bar_graph"
-                android:textOn="@string/pie_chart" />>
+                android:textOn="@string/bar_graph"
+                android:textOff="@string/pie_chart" />>
 
         </LinearLayout>
+
 
         <!-- Chart Views -->
 
@@ -151,13 +158,16 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_weight="1"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            />
+
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/bar_chart"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_weight="1"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            />
 
 
     </LinearLayout>
