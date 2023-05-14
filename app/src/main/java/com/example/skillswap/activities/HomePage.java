@@ -25,6 +25,16 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if user is signed in
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // If user is not null and is not a guest user, redirect to MainActivity
+        if (currentUser != null) {
+            startActivity(new Intent(HomePage.this, MainActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_home_page);
 
         //Find buttons by their ids
