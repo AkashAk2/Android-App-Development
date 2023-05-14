@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.CalendarView;
 
 import com.example.skillswap.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ScheduleActivity extends BaseActivity {
 
@@ -17,22 +20,36 @@ public class ScheduleActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule);
 
-        Button addEvent = findViewById(R.id.addEvent);
+            setContentView(R.layout.activity_schedule);
 
-        //Setting click listeners for the buttons
-        addEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Login activity
-                Intent intent = new Intent(ScheduleActivity.this, CreateEventActivity.class);
-                startActivity(intent);
-            }
-        });
+            Button addEvent = findViewById(R.id.addEvent);
+
+            //Setting click listeners for the buttons
+            addEvent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(ScheduleActivity.this, CreateEventActivity.class);
+                    startActivity(intent);
 
 
-        // Obtain a reference to the CalendarView widget.
-        calendarView = findViewById(R.id.calendarView);
+                }
+            });
+
+
+            // Obtain a reference to the CalendarView widget.
+            calendarView = findViewById(R.id.calendarView);
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setSelectedItemId(R.id.schedule_menu_item);
+        }
     }
 }
