@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 
 public class MySkillViewModel extends ViewModel {
 
-    DatabaseReference mySkillRefs = FirebaseDatabase.getInstance().getReference("users").child("mySkills");
-    DatabaseReference teachSkillRefs =  FirebaseDatabase.getInstance().getReference("users").child("teachSkillsRefs");
+    DatabaseReference learnskills = FirebaseDatabase.getInstance().getReference("learnskills");
+    DatabaseReference userskills =  FirebaseDatabase.getInstance().getReference("userskills");
 
     public enum SkillType {
         LEARN_SKILL, TEACH_SKILL
@@ -72,11 +72,13 @@ public class MySkillViewModel extends ViewModel {
                 callBack.response(new Result.Error(new Exception("Skill already available!")));
                 return;
             }
-            String uniqueId = mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
+            String uniqueId = learnskills.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
             skill.setSkillId(uniqueId);
-            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            learnskills.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    // Add the user to the skill in the "skills" node
+                    learnskills.child(skill.getSkill().toLowerCase()).child(firebaseAuth.getCurrentUser().getUid()).setValue(true);
                     callBack.response(new Result.Success("Skill added successfully!"));
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -97,11 +99,13 @@ public class MySkillViewModel extends ViewModel {
                 return;
             }
 
-            String uniqueId = teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
+            String uniqueId = userskills.child(firebaseAuth.getCurrentUser().getUid()).push().getKey();
             skill.setSkillId(uniqueId);
-            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            userskills.child(firebaseAuth.getCurrentUser().getUid()).child(uniqueId).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    // Add the user to the skill in the "skills" node
+                    userskills.child(skill.getSkill().toLowerCase()).child(firebaseAuth.getCurrentUser().getUid()).setValue(true);
                     callBack.response(new Result.Success("Skill added successfully!"));
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -120,9 +124,11 @@ public class MySkillViewModel extends ViewModel {
 
         skill.setEnabled(false);
         if (skillType == SkillType.LEARN_SKILL) {
-            mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            learnskills.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    // Remove the user from the skill in the "skills" node
+                    learnskills.child(skill.getSkill().toLowerCase()).child(firebaseAuth.getCurrentUser().getUid()).removeValue();
                     callBack.response(new Result.Success(true));
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -132,9 +138,11 @@ public class MySkillViewModel extends ViewModel {
                 }
             });
         } else {
-            teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
+            userskills.child(firebaseAuth.getCurrentUser().getUid()).child(skill.getSkillId()).setValue(skill).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    // Remove the user from the skill in the "skills" node
+                    userskills.child(skill.getSkill().toLowerCase()).child(firebaseAuth.getCurrentUser().getUid()).removeValue();
                     callBack.response(new Result.Success(true));
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -150,7 +158,7 @@ public class MySkillViewModel extends ViewModel {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() == null) return;
 
-        mySkillRefs.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        learnskills.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Skill> newList = new ArrayList<>();
@@ -166,7 +174,7 @@ public class MySkillViewModel extends ViewModel {
             }
         });
 
-        teachSkillRefs.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        userskills.child(firebaseAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Skill> newList = new ArrayList<>();

@@ -147,9 +147,10 @@ public class SignupActivity extends AppCompatActivity {
     private void storeUserData(String uid) {
         Log.d("SignupActivity", "storeUserData: Storing user data for UID: " + uid);
         User newUser = new User(
+                uid, // Add this line to pass the user's Firebase UID
                 firstName.getText().toString().trim(),
                 lastName.getText().toString().trim(),
-                "",
+                "", // Google doesn't provide separate first and last names, so leave lastName empty
                 mobileNumber.getText().toString().trim(),
                 emailID.getText().toString().trim()
         );
@@ -175,5 +176,6 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
 }

@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (!dataSnapshot.exists()) {
                                             // User data does not exist in Realtime Database, so store the data
                                             User newUser = new User(
+                                                    currentUser.getUid(), // Add this line to pass the user's Firebase UID
                                                     currentUser.getDisplayName(),
                                                     "", // Google doesn't provide separate first and last names, so leave lastName empty
                                                     "",

@@ -10,8 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +48,13 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.slider.LabelFormatter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -80,17 +91,69 @@ public class MySkillsFragment extends Fragment {
 
         mMySkillViewModel = new ViewModelProvider(requireActivity()).get(MySkillViewModel.class);
 
-        learnSkillRecyclerView = view.findViewById(R.id.learnSkillRecyclerView);
-        teachSkillRecyclerView = view.findViewById(R.id.teachSkillRecyclerView);
-        learnAddSkillBtn = view.findViewById(R.id.learnAddSkillBtn);
-        teachAddSkillBtn = view.findViewById(R.id.teachAddSkillBtn);
+        // Get the current user
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Update the username TextView
+        TextView usernameTextView = view.findViewById(R.id.username_textview);
+        if (currentUser != null) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists() && snapshot.hasChild("firstName")) {
+                        String firstName = snapshot.child("firstName").getValue(String.class);
+                        usernameTextView.setText(firstName);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle the error
+                }
+            });
+
+            Spinner roleSpinner = view.findViewById(R.id.role_spinner);
+            ArrayAdapter<CharSequence> roleAdapter = ArrayAdapter.createFromResource(requireContext(),
+                    R.array.roles, android.R.layout.simple_spinner_item);
+
+            roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    // Get the selected role
+                    String role = parent.getItemAtPosition(position).toString();
+
+                    // Update the user role in Firebase
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (currentUser != null) {
+                        String uid = currentUser.getUid();
+                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
+                        usersRef.child("role").setValue(role);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // Do nothing
+                }
+            });
+
+            roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            roleSpinner.setAdapter(roleAdapter);
+
+
+            learnSkillRecyclerView = view.findViewById(R.id.learnSkillRecyclerView);
+            teachSkillRecyclerView = view.findViewById(R.id.teachSkillRecyclerView);
+            learnAddSkillBtn = view.findViewById(R.id.learnAddSkillBtn);
+            teachAddSkillBtn = view.findViewById(R.id.teachAddSkillBtn);
+        }
 
 
         SkillAdapter adapter = new SkillAdapter(null, new SkillAdapter.OnItemClickListener() {
             @Override
             public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
-                        .setMessage("Do you want to delete the skill " + skill + "?")
+                        .setMessage("Do you want to delete the skill " + skill.getSkill() + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -120,7 +183,7 @@ public class MySkillsFragment extends Fragment {
             @Override
             public void onSkillClicked(Skill skill) {
                 new AlertDialog.Builder(requireContext())
-                        .setMessage("Do you want to delete the skill " + skill + "?")
+                        .setMessage("Do you want to delete the skill " + skill.getSkill() + "?")
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

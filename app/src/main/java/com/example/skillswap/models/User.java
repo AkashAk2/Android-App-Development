@@ -2,6 +2,7 @@ package com.example.skillswap.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
+    private String uid;
     private String firstName;
     private String lastName;
 
@@ -13,12 +14,21 @@ public class User implements Serializable {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String firstName, String lastName, String dob, String mobileNumber, String emailID) {
+    public User(String uid, String firstName, String lastName, String dob, String mobileNumber, String emailID) {
+        this.uid = uid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.mobileNumber = mobileNumber;
         this.emailID = emailID;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getFirstName() {
@@ -60,4 +70,6 @@ public class User implements Serializable {
     public void setEmail(String emailID) {
         this.emailID = emailID;
     }
+
+
 }

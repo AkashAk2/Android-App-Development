@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="My Skill"
+        android:background="@color/blue"
         tools:layout_editor_absoluteX="147dp"
         tools:layout_editor_absoluteY="199dp" />
 </LinearLayout>
