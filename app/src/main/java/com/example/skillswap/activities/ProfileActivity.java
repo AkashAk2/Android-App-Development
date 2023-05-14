@@ -300,7 +300,7 @@ public class ProfileActivity extends BaseActivity {
 
     private void loadUserDetails() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
+        if (currentUser != null && !currentUser.isAnonymous()) {
             String userId = currentUser.getUid();
             DatabaseReference userRef = mDatabase.child("users").child(userId);
 
@@ -363,7 +363,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void updateUI(FirebaseUser currentUser) {
-        if (currentUser == null) {
+        if (currentUser != null && currentUser.isAnonymous()) {
             guestTitle.setVisibility(View.VISIBLE);
             guestText.setVisibility(View.VISIBLE);
             loginButton.setVisibility(View.VISIBLE);

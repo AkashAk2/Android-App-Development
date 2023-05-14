@@ -38,9 +38,14 @@ public class UserProfileActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get current user's ID
+                // Get current user
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
+
+                // Check if user is logged in
+                if (currentUser != null && !currentUser.isAnonymous()) {
+                    // User is logged in, allow them to add a connection
+
+                    // Get current user's ID
                     String currentUserId = currentUser.getUid();
 
                     // Get reference to current user's connections
@@ -53,18 +58,23 @@ public class UserProfileActivity extends AppCompatActivity {
 
                     String originalEmail = sanitizedEmail.replace(',', '.');
 
-
                     // Add user to current user's connections using user's uid
                     connectionsRef.child(user.getUid()).setValue(true);
-
 
                     Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
 
+                } else {
+                    // User is not logged in, redirect them to ProfileActivity
+
+                    Intent intent = new Intent(UserProfileActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
+
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

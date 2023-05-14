@@ -91,6 +91,11 @@ public class MySkillsFragment extends Fragment {
 
         mMySkillViewModel = new ViewModelProvider(requireActivity()).get(MySkillViewModel.class);
 
+        learnSkillRecyclerView = view.findViewById(R.id.learnSkillRecyclerView);
+        teachSkillRecyclerView = view.findViewById(R.id.teachSkillRecyclerView);
+        learnAddSkillBtn = view.findViewById(R.id.learnAddSkillBtn);
+        teachAddSkillBtn = view.findViewById(R.id.teachAddSkillBtn);
+
         // Get the current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -141,11 +146,6 @@ public class MySkillsFragment extends Fragment {
             roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             roleSpinner.setAdapter(roleAdapter);
 
-
-            learnSkillRecyclerView = view.findViewById(R.id.learnSkillRecyclerView);
-            teachSkillRecyclerView = view.findViewById(R.id.teachSkillRecyclerView);
-            learnAddSkillBtn = view.findViewById(R.id.learnAddSkillBtn);
-            teachAddSkillBtn = view.findViewById(R.id.teachAddSkillBtn);
         }
 
 
@@ -178,7 +178,9 @@ public class MySkillsFragment extends Fragment {
                         }).create().show();
             }
         });
-        learnSkillRecyclerView.setAdapter(adapter);
+        if (learnSkillRecyclerView != null) {
+            learnSkillRecyclerView.setAdapter(adapter);
+        }
         TeachSkillAdapter teachAdapter = new TeachSkillAdapter(null, new TeachSkillAdapter.OnItemClickListener() {
             @Override
             public void onSkillClicked(Skill skill) {
@@ -208,7 +210,9 @@ public class MySkillsFragment extends Fragment {
                         }).create().show();
             }
         });
+        if(teachSkillRecyclerView != null) {
         teachSkillRecyclerView.setAdapter(teachAdapter);
+        }
 
         learnAddSkillBtn.setOnClickListener(new View.OnClickListener() {
             @Override

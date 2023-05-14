@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,9 @@ import com.example.skillswap.models.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -83,7 +87,7 @@ public class MainActivity extends BaseActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         User user = dataSnapshot.getValue(User.class);
-                        if (user != null) {
+                        if (user != null && !currentUser.isAnonymous()) {
                             welcomeTextView.setText("Hello, " + user.getFirstName() + "!");
 
                             // Get reference to current user's connections
@@ -163,8 +167,30 @@ public class MainActivity extends BaseActivity {
             });
 
 
-        } else {
-            welcomeTextView.setText("Hello, guest user!");
+        }
+        else {
+            welcomeTextView.setText("Hello, Guest user!");
+
+            // User is not signed in, proceed with anonymous sign-in
+            mAuth.signInAnonymously()
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign-in success, update UI with the signed-in user's information
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                // Proceed with retrieving data and setting up the UI
+                                // ...
+                            } else {
+                                // If sign-in fails, display a message to the user.
+                                Log.w("GuestAnonymous", "signInAnonymously:failure", task.getException());
+                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                // Handle any additional error handling if required
+                                // ...
+                            }
+                        }
+                    });
             profileImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -174,31 +200,41 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
+
+        if(currentUser != null && currentUser.isAnonymous()) {
+            welcomeTextView.setText("Hello, Guest user!");
+        }
     }
 
     private void searchUsers(String skill) {
         skill = skill.toLowerCase(); // convert skill to lowercase for case-insensitive search
+        Log.d("SearchUsers", "Searching for skill: " + skill); // Log the skill being searched for
         DatabaseReference userskills = FirebaseDatabase.getInstance().getReference("userskills").child(skill);
         userskills.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("SearchUsers", "Received data from Firebase: " + dataSnapshot.toString()); // Log the received data
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String uid = snapshot.getKey();
+                    Log.d("SearchUsers", "Processing user with ID: " + uid); // Log the user ID being processed
                     DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
                     userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                             User user = userSnapshot.getValue(User.class);
                             if (user != null) {
+                                Log.d("SearchUsers", "Found user: " + user.toString()); // Log the found user
                                 userList.add(user);
+                            } else {
+                                Log.d("SearchUsers", "User object is null"); // Log if the User object is null
                             }
                             userAdapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Log.d("MainActivityClass", "Firebase error: " + error.getMessage());
+                            Log.d("SearchUsers", "Firebase error: " + error.getMessage());
                         }
                     });
                 }
@@ -206,10 +242,11 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("MainActivityClass", "Firebase error: " + databaseError.getMessage());
+                Log.d("SearchUsers", "Firebase error: " + databaseError.getMessage());
             }
         });
     }
+
 
 
 
