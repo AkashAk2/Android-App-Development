@@ -12,5 +12,6 @@
         tools:text="My Skill"
         android:background="@color/blue"
         tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="199dp" />
+        tools:layout_editor_absoluteY="199dp"
+        android:textSize="10dp"/>
 </LinearLayout>
