@@ -10,4 +10,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="mild_green">#F6FFDE</color>
     <color name="appBackground">#06283D</color>
+    <color name="red">#ED2B2A</color>
 </resources>

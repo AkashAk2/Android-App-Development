@@ -2,6 +2,7 @@ package com.example.skillswap.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,31 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                     String lastName = dataSnapshot.child("lastName").getValue(String.class);
                     String email = dataSnapshot.child("email").getValue(String.class);
 
+                    DatabaseReference skillsRef = FirebaseDatabase.getInstance().getReference("userskills").child(uid);
+                    skillsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                StringBuilder skillsBuilder = new StringBuilder();
+                                for (DataSnapshot skillSnapshot : dataSnapshot.getChildren()) {
+                                    String skill = skillSnapshot.child("skill").getValue(String.class);
+                                    if (skillsBuilder.length() > 0) {
+                                        skillsBuilder.append(", ");
+                                    }
+                                    skillsBuilder.append(skill);
+                                }
+                                String skills = skillsBuilder.toString();
+                                holder.skillTextView.setText("Skills: " + skills);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle possible errors.
+                        }
+                    });
+
+
                     holder.nameTextView.setText("Name: " + firstName + " " + lastName);
                     holder.emailTextView.setText("Email ID: " + email);
 
@@ -89,6 +115,15 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
                         }
                     });
 
+                    holder.sendEmailButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                            emailIntent.setData(Uri.parse("mailto:" + email));
+                            context.startActivity(Intent.createChooser(emailIntent, "Send email"));
+                        }
+                    });
+
                 }
             }
 
@@ -110,13 +145,18 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView emailTextView;
+        TextView skillTextView;
         Button removeButton;
+        Button sendEmailButton;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             emailTextView = itemView.findViewById(R.id.emailTextView);
             removeButton = itemView.findViewById(R.id.removeButton);
+            skillTextView = itemView.findViewById(R.id.skillTextView);
+            sendEmailButton = itemView.findViewById(R.id.sendEmailButton);
         }
     }
 }
