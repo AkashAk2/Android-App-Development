@@ -4,14 +4,10 @@
         android:id="@+id/home_menu_item"
         android:icon="@drawable/ic_home"
         android:title="Home" />
-<!--    <item-->
-<!--        android:id="@+id/search_menu_item"-->
-<!--        android:icon="@drawable/ic_search"-->
-<!--        android:title="Search" />-->
     <item
-        android:id="@+id/chat_menu_item"
-        android:icon="@drawable/ic_chat"
-        android:title="Chat" />
+        android:id="@+id/nearby_places_menu_item"
+        android:icon="@drawable/ic_nearby_places"
+        android:title="Nearby" />
     <item
         android:id="@+id/myskill_menu_item"
         android:icon="@drawable/ic_myskill"

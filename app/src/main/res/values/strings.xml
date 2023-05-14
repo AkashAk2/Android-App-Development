@@ -16,4 +16,5 @@
     </string-array>
     <string name="bar_graph">Bar Graph</string>
     <string name="pie_chart">Pie Chart</string>
+    <string name="google_maps_api_key">AIzaSyCG0YZpLGpVIx_M-lS4RpW-NtwMBPFjlJA</string>
 </resources>

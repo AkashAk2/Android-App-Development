@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SkillSwap"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCG0YZpLGpVIx_M-lS4RpW-NtwMBPFjlJA" />
         <activity
             android:name=".activities.UserProfileActivity"
             android:exported="false" />
@@ -52,6 +55,8 @@
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.ScheduleActivity" />
         <activity android:name=".activities.CreateEventActivity" />
+        <activity android:name=".activities.NearbyPlacesActivity" />
+
     </application>
 
 </manifest>

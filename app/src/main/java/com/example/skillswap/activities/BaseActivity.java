@@ -1,18 +1,23 @@
 package com.example.skillswap.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.skillswap.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public abstract class BaseActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     protected BottomNavigationView bottomNavigationView;
+    public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +47,15 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 }
                 return true;
 
-            case R.id.chat_menu_item:
-                // TODO: Handle the chat menu item click
+            case R.id.nearby_places_menu_item:
+                if (!(this instanceof NearbyPlacesActivity)) {
+                    Intent nearbyPlacesIntent = new Intent(this, NearbyPlacesActivity.class);
+                    startActivity(nearbyPlacesIntent);
+                    finish();
+                }
                 return true;
 
             case R.id.myskill_menu_item:
-                // TODO: Handle the my skill menu item click
                 if (!(this instanceof MySkillActivity)){
                     Intent mySkillIntent = new Intent(this, MySkillActivity.class);
                     startActivity(mySkillIntent);
@@ -56,7 +64,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BottomNa
                 return true;
 
             case R.id.schedule_menu_item:
-                // TODO: Handle the schedule menu item click
                 if (!(this instanceof ScheduleActivity)){
                     Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
                     startActivity(scheduleIntent);
