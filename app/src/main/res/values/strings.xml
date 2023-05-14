@@ -15,5 +15,5 @@
         <item>Either</item>
     </string-array>
     <string name="bar_graph">Bar Graph</string>
-    <string name="pie_chart">Bar Graph</string>
+    <string name="pie_chart">Pie Chart</string>
 </resources>

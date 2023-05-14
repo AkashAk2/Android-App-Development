@@ -131,14 +131,15 @@
                 android:inputType="none"
                 android:textColorHint="#cccccc"
                 />
+
             <ToggleButton
-                android:id="@+id/toggle_button"
+                android:id="@+id/toggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:textOff="@string/bar_graph"
-                android:textOn="@string/pie_chart" />
+                android:textOn="@string/pie_chart" />>
 
         </LinearLayout>
 

@@ -315,6 +315,11 @@ public class MySkillsFragment extends Fragment {
         mBinding.toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mBinding.toggleButton.getText().equals(getString(R.string.bar_graph))) {
+                    mBinding.toggleButton.setText(getString(R.string.pie_chart));
+                } else {
+                    mBinding.toggleButton.setText(getString(R.string.bar_graph));
+                }
                 displayGraphsOrChart();
             }
         });
@@ -351,7 +356,6 @@ public class MySkillsFragment extends Fragment {
     }
 
     private void displayGraphsOrChart() {
-
         if (mBinding.toggleButton.getText().equals(getString(R.string.bar_graph))) {
             mBinding.barChart.setVisibility(View.VISIBLE);
             mBinding.pieChart.setVisibility(View.GONE);
