@@ -441,7 +441,8 @@ public class MySkillsFragment extends Fragment {
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         int index = 0;
         for (String key : skillCatCountLearnSkill.keySet()) {
-            barEntries.add(new BarEntry(index++, skillCatCountLearnSkill.get(key)));
+            float percentage = (skillCatCountLearnSkill.get(key) / (float) totalCat) * 100;
+            barEntries.add(new BarEntry(index++, percentage));
         }
 
         ArrayList<Integer> colors = new ArrayList<>();
