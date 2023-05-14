@@ -28,7 +28,6 @@ public class ScheduleActivity extends BaseActivity {
                 //Login activity
                 Intent intent = new Intent(ScheduleActivity.this, CreateEventActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 

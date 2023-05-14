@@ -47,7 +47,14 @@ public class CreateEventActivity extends AppCompatActivity {
 
         // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
-        eventRef = FirebaseDatabase.getInstance().getReference().child("user");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            eventRef = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid()).child("events");
+        } else {
+            Intent intent = new Intent(CreateEventActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Initialize views
         editTextTitle = findViewById(R.id.editTextTitle);
